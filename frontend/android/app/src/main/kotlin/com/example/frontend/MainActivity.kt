@@ -1,4 +1,4 @@
-package com.example.no_fila
+package com.example.frontend
 
 import io.flutter.embedding.android.FlutterActivity
 
