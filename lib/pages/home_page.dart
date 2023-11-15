@@ -15,17 +15,16 @@ class _HomePageState extends State<HomePage> {
     return MaterialApp(
       home: Scaffold(
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Center(
-                child: Text(
-                  'Parabéns! Você está logado no sistema!',
-                  style: TextStyle(
-                    color: Colors.indigo,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: Text(
+                'Parabéns! Você está logado no sistema!',
+                style: TextStyle(
+                  color: Colors.indigo,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
