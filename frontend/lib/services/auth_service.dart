@@ -33,10 +33,10 @@ class AuthService extends ChangeNotifier {
       await _auth.createUserWithEmailAndPassword(email: email, password: senha);
       _getUser();
     } on FirebaseAuthException catch (err) {
-      if (err.code == 'weak-password') {
-        throw AuthException('A senha é muito fraca!');
-      } else if (err.code == 'email-already-in-use') {
+      if (err.code == 'email-already-in-use') {
         throw AuthException('Este e-mail já está cadastrado.');
+      } else if (err.code == 'invalid-email') {
+        throw AuthException('Por favor, insira um e-mail válido.');
       }
     }
   }
@@ -46,10 +46,12 @@ class AuthService extends ChangeNotifier {
       await _auth.signInWithEmailAndPassword(email: email, password: senha);
       _getUser();
     } on FirebaseAuthException catch (err) {
-      if (err.code == 'user-not-found') {
-        throw AuthException('E-mail não encontrado. Cadastre-se.');
-      } else if (err.code == 'wrong-password') {
-        throw AuthException('Senha incorreta. Tente novamente.');
+      if (err.code == 'INVALID_LOGIN_CREDENTIALS') {
+        throw AuthException('E-mail ou senha incorreta. Tente novamente.');
+      } else if (err.code == 'invalid-email') {
+        throw AuthException('Por favor, insira um e-mail válido.');
+      } else if (err.code == 'too-many-requests') {
+        throw AuthException('E-mail ou senha incorreta. Tente novamente.');
       }
     }
   }
