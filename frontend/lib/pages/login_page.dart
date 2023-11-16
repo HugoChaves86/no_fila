@@ -45,8 +45,9 @@ class _LoginPageState extends State<LoginPage> {
       await context.read<AuthService>().login(email.text, senha.text);
     } on AuthException catch (err) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(err.message),
-          duration: const Duration(milliseconds: 500)));
+        content: Text(err.message),
+        duration: const Duration(seconds: 3),
+      ));
     }
   }
 
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
     } on AuthException catch (err) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(err.message),
-        duration: const Duration(milliseconds: 800),
+        duration: const Duration(seconds: 3),
       ));
     }
   }
