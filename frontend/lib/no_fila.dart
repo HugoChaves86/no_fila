@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/widgets/auth_check.dart';
 
-class NoFila extends StatelessWidget {
+class NoFila extends ConsumerWidget {
   const NoFila({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: '!Fila',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF3F51B5),
+          secondary: Color(0xFF448AFF),
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+        ),
+        useMaterial3: true,
       ),
       home: const AuthCheck(),
     );

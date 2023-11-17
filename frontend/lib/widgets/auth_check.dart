@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:no_fila/services/auth_service.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:no_fila/providers.dart';
+import '../services/auth_service.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 
-class AuthCheck extends StatefulWidget {
+class AuthCheck extends ConsumerWidget {
   const AuthCheck({super.key});
 
   @override
-  State<AuthCheck> createState() => _AuthCheckState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<AuthState> authState = ref.watch(authServiceProvider);
 
-class _AuthCheckState extends State<AuthCheck> {
-  @override
-  Widget build(BuildContext context) {
-    AuthService auth = Provider.of<AuthService>(context);
-
-    if (auth.isloading) {
-      return loading();
-    } else if (auth.usuario == null) {
-      return const LoginPage();
-    } else {
-      return const HomePage();
-    }
+    return authState.when(
+        data: (authState) {
+          if (authState.user == null) {
+            return const LoginPage();
+          } else {
+            return const HomePage();
+          }
+        },
+        loading: () => loading(),
+        error: (err, stack) => errorWidget(err, stack));
   }
 
-  loading() {
+  Widget loading() {
     return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget errorWidget(e, st) {
+    return Scaffold(
+      body: Center(
+        child: Text('Erro: $e'),
       ),
     );
   }

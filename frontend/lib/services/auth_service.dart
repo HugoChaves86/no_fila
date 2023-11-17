@@ -1,34 +1,36 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthException implements Exception {
   String message;
   AuthException(this.message);
 }
 
-class AuthService extends ChangeNotifier {
+class AuthState {
+  final User? user;
+  final bool isloading;
+
+  AuthState({this.user, this.isloading = true});
+}
+
+class AuthNotifier extends AsyncNotifier<AuthState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? usuario;
-  bool isloading = true;
 
-  AuthService() {
-    _authCheck();
-  }
-
-  _authCheck() {
+  @override
+  FutureOr<AuthState> build() {
     _auth.authStateChanges().listen((User? user) {
-      usuario = (user == null) ? null : user;
-      isloading = false;
-      notifyListeners();
+      state = AsyncValue.data(AuthState(user: user, isloading: false));
     });
+    return AuthState(user: _auth.currentUser, isloading: true);
   }
 
-  _getUser() {
-    usuario = _auth.currentUser;
-    notifyListeners();
+  void _getUser() {
+    User? user = _auth.currentUser;
+    state = AsyncValue.data(AuthState(user: user, isloading: false));
   }
 
-  registrar(String email, String senha) async {
+  Future<void> registrar(String email, String senha) async {
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: senha);
       _getUser();
@@ -41,7 +43,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  login(String email, String senha) async {
+  Future<void> login(String email, String senha) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: senha);
       _getUser();
@@ -56,7 +58,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  logout() async {
+  Future<void> logout() async {
     await _auth.signOut();
     _getUser();
   }
