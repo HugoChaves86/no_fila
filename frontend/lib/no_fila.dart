@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/widgets/auth_check.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-final baseTextStyle = StateProvider(
-  (ref) => GoogleFonts.outfit(
-    fontStyle: FontStyle.normal,
-    fontWeight: FontWeight.normal,
-  ),
-);
 
 class NoFila extends ConsumerWidget {
   const NoFila({super.key});

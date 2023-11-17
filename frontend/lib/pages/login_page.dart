@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:no_fila/services/auth_service.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:no_fila/providers.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final senha = TextEditingController();
@@ -42,7 +43,9 @@ class _LoginPageState extends State<LoginPage> {
 
   login() async {
     try {
-      await context.read<AuthService>().login(email.text, senha.text);
+      await ref
+          .read(authServiceProvider.notifier)
+          .login(email.text, senha.text);
     } on AuthException catch (err) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.message),
@@ -52,7 +55,9 @@ class _LoginPageState extends State<LoginPage> {
 
   registrar() async {
     try {
-      await context.read<AuthService>().registrar(email.text, senha.text);
+      await ref
+          .read(authServiceProvider.notifier)
+          .registrar(email.text, senha.text);
     } on AuthException catch (err) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(err.message),

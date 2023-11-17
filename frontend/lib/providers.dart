@@ -12,6 +12,6 @@ final baseTextStyleProvider = StateProvider(
   ),
 );
 
-final authServiceProvider = ChangeNotifierProvider(
-  (ref) => AuthService(),
+final authServiceProvider = AsyncNotifierProvider<AuthNotifier, AuthState>(
+  () => AuthNotifier(),
 );
