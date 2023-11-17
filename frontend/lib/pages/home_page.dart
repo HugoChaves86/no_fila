@@ -31,7 +31,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: OutlinedButton(
-                onPressed: () => ref.read(authServiceProvider),
+                onPressed: () =>
+                    ref.read(authServiceProvider.notifier).logout(),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                 ),
