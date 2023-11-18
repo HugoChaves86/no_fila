@@ -39,12 +39,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   login() async {
+    final scaffoldContext = ScaffoldMessenger.of(context);
     try {
       await ref
           .read(authServiceProvider.notifier)
           .login(email.text, senha.text);
     } on AuthException catch (err) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      scaffoldContext.showSnackBar(SnackBar(
         content: Text(err.message),
         duration: const Duration(seconds: 3),
       ));
@@ -52,12 +53,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   registrar() async {
+    final scaffoldContext = ScaffoldMessenger.of(context);
     try {
       await ref
           .read(authServiceProvider.notifier)
           .registrar(email.text, senha.text);
     } on AuthException catch (err) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      scaffoldContext.showSnackBar(SnackBar(
         content: Text(err.message),
         duration: const Duration(seconds: 3),
       ));
@@ -108,6 +110,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 },
                               ),
                               TextFormField(
+                                controller: senha,
                                 obscureText: true,
                                 enableSuggestions: false,
                                 decoration: const InputDecoration(
@@ -125,8 +128,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   return null;
                                 },
                               ),
+                              if (!isLogin)
+                                TextFormField(
+                                  obscureText: true,
+                                  enableSuggestions: false,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Repita a senha',
+                                    icon: Icon(Icons.lock_outline_rounded),
+                                    iconColor: Colors.indigo,
+                                  ),
+                                  keyboardType: TextInputType.visiblePassword,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Informa a sua senha';
+                                    } else if (value != senha.text) {
+                                      return 'As senhas não conferem';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(),
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
                                     if (isLogin) {
@@ -139,7 +160,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Icon(Icons.login),
+                                    isLogin
+                                        ? const Icon(Icons.login)
+                                        : const Icon(Icons.person_add_alt),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(actionButton),
@@ -159,7 +182,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const TelaEsqueceuSenha(),
+                                                TelaEsqueceuSenha(),
                                           ),
                                         );
                                       },
@@ -198,7 +221,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 }
 
 class TelaEsqueceuSenha extends ConsumerWidget {
-  const TelaEsqueceuSenha({super.key});
+  TelaEsqueceuSenha({super.key});
+
+  final formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -207,42 +233,67 @@ class TelaEsqueceuSenha extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                height: 220,
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text(
-                      'Digite o email associado a sua conta para receber um email de recuperação de senha.',
-                      style: ref
-                          .read(baseTextStyleProvider)
-                          .copyWith(fontSize: 16),
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        icon: Icon(Icons.alternate_email_outlined),
-                        iconColor: Colors.indigo,
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 220,
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        'Digite o email associado a sua conta para receber um email de recuperação de senha.',
+                        style: ref
+                            .read(baseTextStyleProvider)
+                            .copyWith(fontSize: 16),
                       ),
-
-                      // Update username in the state
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(),
-                      child: const Text('Enviar email de recuperação'),
-                      onPressed: () {
-                        // Call signIn on your LoginNotifier
-                      },
-                    ),
-                  ],
+                      TextFormField(
+                        controller: email,
+                        decoration: const InputDecoration(
+                          labelText: 'Digite seu email',
+                          icon: Icon(Icons.alternate_email_outlined),
+                          iconColor: Colors.indigo,
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Informe o e-mail corretamente';
+                          }
+                          return null;
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(),
+                        child: const Text('Enviar email de recuperação'),
+                        onPressed: () async {
+                          final scaffoldContext = ScaffoldMessenger.of(context);
+                          if (formKey.currentState!.validate()) {
+                            try {
+                              final status = await ref
+                                  .read(authServiceProvider.notifier)
+                                  .resetPassword(email.text);
+                              scaffoldContext.showSnackBar(SnackBar(
+                                content: Text(status),
+                                duration: const Duration(seconds: 3),
+                              ));
+                            } on AuthException catch (err) {
+                              scaffoldContext.showSnackBar(SnackBar(
+                                content: Text(err.message),
+                                duration: const Duration(seconds: 3),
+                              ));
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

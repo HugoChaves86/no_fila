@@ -48,7 +48,7 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
       await _auth.signInWithEmailAndPassword(email: email, password: senha);
       _getUser();
     } on FirebaseAuthException catch (err) {
-      if (err.code == 'INVALID_LOGIN_CREDENTIALS') {
+      if (err.code == 'invalid-login-credentials') {
         throw AuthException('E-mail ou senha incorreta. Tente novamente.');
       } else if (err.code == 'invalid-email') {
         throw AuthException('Por favor, insira um e-mail válido.');
@@ -61,5 +61,16 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   Future<void> logout() async {
     await _auth.signOut();
     _getUser();
+  }
+
+  Future<String> resetPassword(String email) async {
+    late String status;
+    await _auth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => status = 'E-mail de recuperação enviado para $email')
+        .catchError((err) =>
+            throw AuthException('E-mail não encontrado. Tente novamente.'));
+
+    return status;
   }
 }
