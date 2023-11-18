@@ -271,6 +271,7 @@ class TelaEsqueceuSenha extends ConsumerWidget {
                         child: const Text('Enviar email de recuperação'),
                         onPressed: () async {
                           final scaffoldContext = ScaffoldMessenger.of(context);
+                          final navigatorContext = Navigator.of(context);
                           if (formKey.currentState!.validate()) {
                             try {
                               final status = await ref
@@ -280,6 +281,7 @@ class TelaEsqueceuSenha extends ConsumerWidget {
                                 content: Text(status),
                                 duration: const Duration(seconds: 3),
                               ));
+                              status.isEmpty ? null : navigatorContext.pop();
                             } on AuthException catch (err) {
                               scaffoldContext.showSnackBar(SnackBar(
                                 content: Text(err.message),

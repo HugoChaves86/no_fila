@@ -68,8 +68,8 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
     await _auth
         .sendPasswordResetEmail(email: email)
         .then((value) => status = 'E-mail de recuperação enviado para $email')
-        .catchError((err) =>
-            throw AuthException('E-mail não encontrado. Tente novamente.'));
+        .catchError(
+            (err) => throw AuthException('E-mail inválido. Tente novamente.'));
 
     return status;
   }
