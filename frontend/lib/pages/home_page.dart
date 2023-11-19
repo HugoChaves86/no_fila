@@ -186,7 +186,7 @@ class _HeaderState extends ConsumerState<Header> {
               ),
             ),
           ),
-          const Image(image: AssetImage('images/Logo.png'), height: 40),
+          const Image(image: AssetImage('images/logo.png'), height: 40),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
