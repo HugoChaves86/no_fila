@@ -4,6 +4,7 @@ import 'package:no_fila/providers.dart';
 import 'ajustes_page.dart';
 import 'grade_page.dart';
 import 'profile_page.dart';
+import 'package:dio/dio.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,6 +12,11 @@ class HomePage extends ConsumerStatefulWidget {
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
+
+//  getSiacData(cpf: String, senha: String){
+//   Dio dio = Dio();
+//   dio.post('http://localhost:8000/siac_proof_of_registration', data: {"cpf": "12345678910", "senha": "123456"})
+// }
 
 class _HomePageState extends ConsumerState<HomePage> {
   int selectedIndex = 0;
