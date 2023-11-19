@@ -1,7 +1,7 @@
 {
     "folders": [
         {
-            "path": "..",
+            "path": "../",
             "name": "root"
         },
         {
@@ -11,6 +11,6 @@
         {
             "path": "../frontend",
             "name": "frontend"
-        },
+        }
     ]
 }

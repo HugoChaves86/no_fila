@@ -1,5 +1,5 @@
 import aiohttp
-from models.siac import SiacAuth, SiacProofOfRegistration, SiacSubject, SiacLesson
+from models.siac import SiacAuth, SiacProofOfRegistration, SiacSubject, SiacLesson, SiacGroup
 from io import StringIO
 from http.cookies import SimpleCookie
 import pandas as pd
@@ -33,16 +33,6 @@ async def auth_cookies(cpf: str, senha: str) -> SimpleCookie:
                 )
             return response.cookies
 
- 
-async def proof_of_registration(siac_auth: SiacAuth) -> SiacProofOfRegistration:
-    cookies = await auth_cookies(siac_auth.cpf, siac_auth.senha)
-    comprovante_url = "https://siac.ufba.br/SiacWWW/ConsultarComprovanteMatricula.do"
-
-    async with aiohttp.ClientSession(cookies=cookies) as session:
-        async with session.get(comprovante_url) as response:
-            return parse_proof_of_registration(StringIO(await response.text()))
-
-
 def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
     dfs = pd.read_html(html)
     df = dfs[6]
@@ -50,8 +40,8 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
         "subject_code",
         "subject",
         "workload",
-        "class_code",
-        "class",
+        "group_code",
+        "group",
         "day_of_week",
         "schedule",
         "location",
@@ -64,16 +54,16 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
             "subject_code": "string",
             "subject": "string",
             "workload": "int32",
-            "class_code": "int32",
-            "class": "string",
+            "group_code": "int32",
+            "group": "string",
             "day_of_week": "string",
             "schedule": "string",
             "location": "string",
             "teacher": "string",
         }
-    ).astype({"class_code": "string"})
+    ).astype({"group_code": "string"})
 
-    df["class_code"] = df["class_code"].str.zfill(6)
+    df["group_code"] = df["group_code"].str.zfill(6)
 
     subjects = []
     for subject_code in df.subject_code.unique():
@@ -82,11 +72,10 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
         )
         subjects.append(
             SiacSubject(
-                subject_code=subject_code,
-                subject=subject[0]["subject"],
+                code=subject_code,
+                name=subject[0]["subject"],
                 workload=subject[0]["workload"],
-                class_code=subject[0]["class_code"],
-                class_number=subject[0]["class"],
+                group=SiacGroup(code=subject[0]["group_code"], number=subject[0]["group"]),
                 lessons=[
                     SiacLesson(
                         day_of_week=subject[lesson]["day_of_week"],
@@ -108,11 +97,21 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
     current_semester = dfs[4][1][2].split("\xa0")[1]
     course = dfs[4][0][2].split("\xa0")[1]
     score = float(dfs[4][2][2].split("\xa0")[1])
+    student = dfs[4][1][1].split("\xa0")[1]
 
     return SiacProofOfRegistration(
         course=course,
         registration=registration,
         score=score,
+        student=student,
         subjects=subjects,
         current_semester=current_semester,
     )
+
+async def proof_of_registration(siac_auth: SiacAuth) -> SiacProofOfRegistration:
+    cookies = await auth_cookies(siac_auth.cpf, siac_auth.senha)
+    comprovante_url = "https://siac.ufba.br/SiacWWW/ConsultarComprovanteMatricula.do"
+
+    async with aiohttp.ClientSession(cookies=cookies) as session:
+        async with session.get(comprovante_url) as response:
+            return parse_proof_of_registration(StringIO(await response.text()))
