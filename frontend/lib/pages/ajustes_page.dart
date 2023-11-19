@@ -6,8 +6,8 @@ class MeusAjustes extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: const Text(
+    return const Center(
+      child: Text(
         "Página de Ajustes",
       ),
     );
