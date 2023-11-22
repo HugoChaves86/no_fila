@@ -64,6 +64,8 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
     await _auth.signOut();
     _getUser();
     ref.read(connectSiacProvider.notifier).setConnected(false);
+    //força o usuário ter que logar novamente no SIAC a cada novo
+    //login no Firebase
   }
 
   Future<bool> isLoggedOnSiac() async {
