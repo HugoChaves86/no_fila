@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:no_fila/pages/connect_siac.dart';
+import 'package:no_fila/pages/home_page.dart';
 import 'package:no_fila/providers.dart';
 import '../services/auth_service.dart';
-import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 
 class AuthCheck extends ConsumerWidget {
@@ -17,7 +18,7 @@ class AuthCheck extends ConsumerWidget {
           if (authState.user == null) {
             return const LoginPage();
           } else {
-            return const HomePage();
+            return const AuthSiacCheck();
           }
         },
         loading: () => loading(),
@@ -38,5 +39,15 @@ class AuthCheck extends ConsumerWidget {
         child: Text('Erro: $e'),
       ),
     );
+  }
+}
+
+class AuthSiacCheck extends ConsumerWidget {
+  const AuthSiacCheck({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isConnected = ref.watch(connectSiacProvider);
+    return isConnected ? const HomePage() : const ConnectSiac();
   }
 }
