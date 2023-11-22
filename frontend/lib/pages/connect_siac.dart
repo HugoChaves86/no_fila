@@ -28,7 +28,7 @@ class ConnectSiac extends ConsumerWidget {
 class ConnectSiacNotifier extends StateNotifier<bool> {
   ConnectSiacNotifier() : super(false);
 
-  void setConnected(bool value) {
+  void clicou(bool value) {
     state = value;
   }
 }
@@ -83,9 +83,9 @@ class HomeBar extends ConsumerWidget {
                           .copyWith(fontSize: 14))),
                   child: const Text('Conecte-se com o SIAC'),
                   onPressed: () async {
-                    ref.read(connectSiacProvider.notifier).setConnected(true);
-                    //O connectSiacProvider precisa pegar o token gerado
-                    //e modificar o AuthSiacCheck para seguir para HomePage.
+                    ref.read(connectSiacProvider.notifier).clicou(true);
+                    //O sistema deve direcionar agora para loginSiacPage
+                    //via AuthSiacCheck
 
                     //TODO
                     // Chamar componente conexão SIAC
