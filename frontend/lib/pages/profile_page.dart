@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:no_fila/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +23,7 @@ class _MeuPerfilState extends ConsumerState<MeuPerfil> {
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                'Parabéns! Você está logado no sistema!',
+                'Logoff:',
                 style: TextStyle(
                   color: Colors.indigo,
                   fontSize: 24.0,
@@ -32,8 +34,8 @@ class _MeuPerfilState extends ConsumerState<MeuPerfil> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: OutlinedButton(
-                onPressed: () =>
-                    ref.read(authServiceProvider.notifier).logout(),
+                onPressed: () async =>
+                    await ref.read(authServiceProvider.notifier).logout(),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                 ),

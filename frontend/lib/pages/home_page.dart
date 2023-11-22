@@ -64,10 +64,13 @@ class HomeBar extends ConsumerWidget {
             const Header(),
             Row(
               children: [
-                Text("Bem Vindo,",
-                    style: ref
-                        .read(baseTextStyleProvider)
-                        .copyWith(fontSize: 32, fontWeight: FontWeight.w500)),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text("\nBem vindo,",
+                      style: ref
+                          .read(baseTextStyleProvider)
+                          .copyWith(fontSize: 28, fontWeight: FontWeight.w500)),
+                ),
               ],
             ),
             Row(
@@ -106,60 +109,61 @@ class _ContentSectionState extends ConsumerState<ContentSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Column(
-          children: [
-            Card(
-              color: Theme.of(context).colorScheme.primary,
-              child: ListTile(
-                leading: const Icon(
-                  Icons.calendar_today_rounded,
-                  size: 50,
-                  color: Colors.white,
-                ),
-                title: const Text("Componentes Curriculares"),
-                contentPadding: const EdgeInsets.all(20.0),
-                titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white),
-                subtitle: const Text(
-                  "Visualize os componentes curriculares inscritos",
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
-                onTap: () {
-                  // TODO
-                  // Chamar componente grade
-                },
+      margin: const EdgeInsets.only(top: 20),
+      child: Column(
+        children: [
+          Card(
+            color: Theme.of(context).colorScheme.primary,
+            child: ListTile(
+              leading: const Icon(
+                Icons.calendar_today_rounded,
+                size: 50,
+                color: Colors.white,
               ),
-            ),
-            Card(
-              color: Theme.of(context).colorScheme.primary,
-              child: ListTile(
-                leading: const Icon(
-                  Icons.archive_outlined,
-                  size: 50,
-                  color: Colors.white,
-                ),
-                title: const Text("Solicitações de Ajustes de Matrícula"),
-                contentPadding: const EdgeInsets.all(20.0),
-                titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white),
-                subtitle: Text(
-                    "Crie e acompanhe suas solicitações de ajuste assíncrono",
-                    style: ref
-                        .read(baseTextStyleProvider)
-                        .copyWith(fontSize: 14, color: Colors.white)),
-                onTap: () {
-                  // TODO
-                  // Chamar componente ajustes
-                },
+              title: const Text("Componentes Curriculares"),
+              contentPadding: const EdgeInsets.all(20.0),
+              titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
+              subtitle: const Text(
+                "Visualize os componentes curriculares inscritos",
+                style: TextStyle(fontSize: 14, color: Colors.white),
               ),
+              onTap: () {
+                // TODO
+                // Chamar componente grade
+              },
             ),
-          ],
-        ));
+          ),
+          Card(
+            color: Theme.of(context).colorScheme.primary,
+            child: ListTile(
+              leading: const Icon(
+                Icons.archive_outlined,
+                size: 50,
+                color: Colors.white,
+              ),
+              title: const Text("Solicitações de Ajustes de Matrícula"),
+              contentPadding: const EdgeInsets.all(20.0),
+              titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
+              subtitle: Text(
+                  "Crie e acompanhe suas solicitações de ajuste assíncrono",
+                  style: ref
+                      .read(baseTextStyleProvider)
+                      .copyWith(fontSize: 14, color: Colors.white)),
+              onTap: () {
+                // TODO
+                // Chamar componente ajustes
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -177,10 +181,10 @@ class _HeaderState extends ConsumerState<Header> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Expanded(
+          Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
@@ -192,23 +196,7 @@ class _HeaderState extends ConsumerState<Header> {
               ),
             ),
           ),
-          const Image(image: AssetImage('images/Logo.png'), height: 40),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    textStyle: MaterialStateProperty.all<TextStyle>(ref
-                        .read(baseTextStyleProvider)
-                        .copyWith(fontSize: 14))),
-                child: const Text('Conectar SIAC'),
-                onPressed: () {
-                  // TODO
-                  // Chamar componente conexão SIAC
-                },
-              ),
-            ),
-          ),
+          Image(image: AssetImage('images/logo.png'), height: 40),
         ],
       ),
     );

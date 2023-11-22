@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers.dart';
+
 class AuthException implements Exception {
   String message;
   AuthException(this.message);
@@ -61,6 +63,11 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   Future<void> logout() async {
     await _auth.signOut();
     _getUser();
+    ref.read(connectSiacProvider.notifier).setConnected(false);
+  }
+
+  Future<bool> isLoggedOnSiac() async {
+    return true;
   }
 
   Future<String> resetPassword(String email) async {
