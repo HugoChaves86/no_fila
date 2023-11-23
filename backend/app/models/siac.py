@@ -13,15 +13,16 @@ class SiacLesson(BaseModel):
     location: str
     teacher: str
 
+class SiacGroup(BaseModel):
+    code: str
+    number: str
 
 class SiacSubject(BaseModel):
-    subject_code: str
-    subject: str
+    code: str
+    name: str
     workload: int
-    class_code: str
-    class_number: str
+    group: SiacGroup
     lessons: list[SiacLesson]
-
 
 class SiacProofOfRegistration(BaseModel):
     subjects: list[SiacSubject]
@@ -29,3 +30,4 @@ class SiacProofOfRegistration(BaseModel):
     current_semester: str
     course: str
     score: float
+    student: str
