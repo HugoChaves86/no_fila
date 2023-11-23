@@ -49,6 +49,6 @@ class AuthSiacCheck extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isConnected = ref.watch(connectSiacProvider);
-    return isConnected ? LoginSiacPage() : const ConnectSiac();
+    return isConnected ? const LoginSiacPage() : const ConnectSiac();
   }
 }

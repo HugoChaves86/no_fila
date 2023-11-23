@@ -21,10 +21,6 @@ class ConnectSiac extends ConsumerWidget {
   }
 }
 
-//Notificador do status de conexão com o SIAC
-//Obs.: está em boolean porque estou apenas usando isso
-//para seguir para a HomePage. Necessário mudar a lógica
-//quando tivermos acesso ao token
 class ConnectSiacNotifier extends StateNotifier<bool> {
   ConnectSiacNotifier() : super(false);
 
@@ -64,9 +60,9 @@ class HomeBar extends ConsumerWidget {
             Row(
               children: [
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.center,
                   child: Text(
-                      "\n\nBem vindo ao !FILA.\n\nConecte-se ao SIAC para continuar:",
+                      "\n\nBem vindo ao !FILA.\nConecte-se ao SIAC para continuar:",
                       style: ref
                           .read(baseTextStyleProvider)
                           .copyWith(fontSize: 28, fontWeight: FontWeight.w500)),
@@ -84,11 +80,6 @@ class HomeBar extends ConsumerWidget {
                   child: const Text('Conecte-se com o SIAC'),
                   onPressed: () async {
                     ref.read(connectSiacProvider.notifier).clicou(true);
-                    //O sistema deve direcionar agora para loginSiacPage
-                    //via AuthSiacCheck
-
-                    //TODO
-                    // Chamar componente conexão SIAC
                   },
                 ),
               ),
