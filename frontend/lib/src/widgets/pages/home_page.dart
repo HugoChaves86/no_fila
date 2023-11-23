@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:no_fila/providers.dart';
+import 'package:no_fila/src/common/providers.dart';
 import 'ajustes_page.dart';
 import 'grade_page.dart';
 import 'profile_page.dart';

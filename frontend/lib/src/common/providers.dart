@@ -1,10 +1,9 @@
-// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:no_fila/pages/connect_siac.dart';
-import 'services/auth_service.dart';
-// import 'package:dio/dio.dart';
+import 'package:no_fila/src/widgets/pages/login/connect_siac.dart';
+import '../app/auth_service.dart';
+import 'package:dio/dio.dart';
 
 // Define os global providers do app
 
@@ -31,3 +30,5 @@ final connectionValidation =
 );
 
 final loginSiacProvider = StateProvider<bool>((ref) => false);
+
+final siacDioProvider = Provider((ref) => Dio());

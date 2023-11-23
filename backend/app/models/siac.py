@@ -29,3 +29,4 @@ class SiacProofOfRegistration(BaseModel):
     current_semester: str
     course: str
     score: float
+    student: str

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:no_fila/providers.dart';
+import 'package:no_fila/src/common/providers.dart';
 
 class ConnectSiac extends ConsumerWidget {
   const ConnectSiac({Key? key}) : super(key: key);
