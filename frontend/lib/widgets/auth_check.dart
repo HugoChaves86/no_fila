@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/pages/connect_siac.dart';
+import 'package:no_fila/pages/home_page.dart';
 // import 'package:no_fila/pages/home_page.dart';
 import 'package:no_fila/pages/login_siac_page.dart';
 import 'package:no_fila/providers.dart';
@@ -48,7 +49,17 @@ class AuthSiacCheck extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isConnected = ref.watch(connectSiacProvider);
-    return isConnected ? const LoginSiacPage() : const ConnectSiac();
+    final bool clicou = ref.watch(connectSiacProvider);
+    return clicou ? const AuthSiacValidation() : const ConnectSiac();
+  }
+}
+
+class AuthSiacValidation extends ConsumerWidget {
+  const AuthSiacValidation({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool validation = ref.watch(connectionValidation);
+    return validation ? const HomePage() : const LoginSiacPage();
   }
 }

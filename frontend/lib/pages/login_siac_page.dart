@@ -147,7 +147,7 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
       // print(response);
       if (response.statusCode == 200) {
         //print('Status da conexão: Funcionou!.');
-        ref.read(connectSiacProvider.notifier).clicou(true);
+        ref.read(connectionValidation.notifier).validation(true);
         return true;
       } else {
         return false;

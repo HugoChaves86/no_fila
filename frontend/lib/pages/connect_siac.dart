@@ -29,6 +29,14 @@ class ConnectSiacNotifier extends StateNotifier<bool> {
   }
 }
 
+class ConnectionValidationNotifier extends StateNotifier<bool> {
+  ConnectionValidationNotifier() : super(false);
+
+  void validation(bool value) {
+    state = value;
+  }
+}
+
 class ContentBar extends StatelessWidget {
   const ContentBar({super.key});
 

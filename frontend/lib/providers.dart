@@ -23,4 +23,9 @@ final connectSiacProvider = StateNotifierProvider<ConnectSiacNotifier, bool>(
   (ref) => ConnectSiacNotifier(),
 );
 
+final connectionValidation =
+    StateNotifierProvider<ConnectionValidationNotifier, bool>(
+  (ref) => ConnectionValidationNotifier(),
+);
+
 final loginSiacProvider = StateProvider<bool>((ref) => false);
