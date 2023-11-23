@@ -1,15 +1,9 @@
-from http.cookies import SimpleCookie
-from io import StringIO
-
 import aiohttp
+from models.siac import SiacAuth, SiacProofOfRegistration, SiacSubject, SiacLesson, SiacGroup
+from io import StringIO
+from http.cookies import SimpleCookie
 import pandas as pd
 from fastapi.exceptions import HTTPException
-from models.siac import (
-    SiacAuth,
-    SiacLesson,
-    SiacProofOfRegistration,
-    SiacSubject,
-)
 from starlette.status import HTTP_400_BAD_REQUEST
 
 
@@ -19,39 +13,25 @@ async def auth_cookies(cpf: str, senha: str) -> SimpleCookie:
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(
-            login_url, data=data, headers=headers
-        ) as response:
+        async with session.post(login_url, data=data, headers=headers) as response:
             response_text = await response.text()
-
+            
             if "O CPF informado não é válido." in response_text:
                 raise HTTPException(
-                    status_code=HTTP_400_BAD_REQUEST, detail="Invalid CPF."
+                    status_code=HTTP_400_BAD_REQUEST, 
+                    detail="Invalid CPF."
                 )
             if "For input string: " in response_text:
                 raise HTTPException(
-                    status_code=HTTP_400_BAD_REQUEST, detail="Invalid CPF."
+                    status_code=HTTP_400_BAD_REQUEST, 
+                    detail="Invalid CPF."
                 )
             if "A senha informada para o usuário de CPF" in response_text:
                 raise HTTPException(
-                    status_code=HTTP_400_BAD_REQUEST,
-                    detail="Invalid Password.",
+                    status_code=HTTP_400_BAD_REQUEST, 
+                    detail="Invalid Password."
                 )
             return response.cookies
-
-
-async def proof_of_registration(
-    siac_auth: SiacAuth,
-) -> SiacProofOfRegistration:
-    cookies = await auth_cookies(siac_auth.cpf, siac_auth.senha)
-    comprovante_url = (
-        "https://siac.ufba.br/SiacWWW/ConsultarComprovanteMatricula.do"
-    )
-
-    async with aiohttp.ClientSession(cookies=cookies) as session:
-        async with session.get(comprovante_url) as response:
-            return parse_proof_of_registration(StringIO(await response.text()))
-
 
 def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
     dfs = pd.read_html(html)
@@ -60,8 +40,8 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
         "subject_code",
         "subject",
         "workload",
-        "class_code",
-        "class",
+        "group_code",
+        "group",
         "day_of_week",
         "schedule",
         "location",
@@ -74,31 +54,28 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
             "subject_code": "string",
             "subject": "string",
             "workload": "int32",
-            "class_code": "int32",
-            "class": "string",
+            "group_code": "int32",
+            "group": "string",
             "day_of_week": "string",
             "schedule": "string",
             "location": "string",
             "teacher": "string",
         }
-    ).astype({"class_code": "string"})
+    ).astype({"group_code": "string"})
 
-    df["class_code"] = df["class_code"].str.zfill(6)
+    df["group_code"] = df["group_code"].str.zfill(6)
 
     subjects = []
     for subject_code in df.subject_code.unique():
         subject = (
-            df.where(df.subject_code == subject_code)
-            .dropna()
-            .to_dict(orient="records")
+            df.where(df.subject_code == subject_code).dropna().to_dict(orient="records")
         )
         subjects.append(
             SiacSubject(
-                subject_code=subject_code,
-                subject=subject[0]["subject"],
+                code=subject_code,
+                name=subject[0]["subject"],
                 workload=subject[0]["workload"],
-                class_code=subject[0]["class_code"],
-                class_number=subject[0]["class"],
+                group=SiacGroup(code=subject[0]["group_code"], number=subject[0]["group"]),
                 lessons=[
                     SiacLesson(
                         day_of_week=subject[lesson]["day_of_week"],
@@ -130,3 +107,11 @@ def parse_proof_of_registration(html: StringIO) -> SiacProofOfRegistration:
         subjects=subjects,
         current_semester=current_semester,
     )
+
+async def proof_of_registration(siac_auth: SiacAuth) -> SiacProofOfRegistration:
+    cookies = await auth_cookies(siac_auth.cpf, siac_auth.senha)
+    comprovante_url = "https://siac.ufba.br/SiacWWW/ConsultarComprovanteMatricula.do"
+
+    async with aiohttp.ClientSession(cookies=cookies) as session:
+        async with session.get(comprovante_url) as response:
+            return parse_proof_of_registration(StringIO(await response.text()))
