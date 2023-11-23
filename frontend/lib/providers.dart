@@ -23,6 +23,8 @@ final connectSiacProvider = StateNotifierProvider<ConnectSiacNotifier, bool>(
   (ref) => ConnectSiacNotifier(),
 );
 
+//Provider criado apenas para direcionamento para a HomePage
+//após a validação da conexão com o SIAC, via classe "AuthCheck"
 final connectionValidation =
     StateNotifierProvider<ConnectionValidationNotifier, bool>(
   (ref) => ConnectionValidationNotifier(),
