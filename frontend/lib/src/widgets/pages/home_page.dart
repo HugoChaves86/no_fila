@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/src/common/providers.dart';
+import 'package:no_fila/src/common/utils.dart';
 import 'ajustes_page.dart';
 import 'grade_page.dart';
 import 'profile_page.dart';
-import 'package:dio/dio.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,11 +12,6 @@ class HomePage extends ConsumerStatefulWidget {
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
-
-//  getSiacData(cpf: String, senha: String){
-//   Dio dio = Dio();
-//   dio.post('http://localhost:8000/siac_proof_of_registration', data: {"cpf": "12345678910", "senha": "123456"})
-// }
 
 class _HomePageState extends ConsumerState<HomePage> {
   int selectedIndex = 0;
@@ -56,6 +51,8 @@ class HomeBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.read(userDataProvider).usuarioSiac;
+    List<String> nome = nomeDeUsuario(fullName: userData?.nome);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Center(
@@ -64,19 +61,16 @@ class HomeBar extends ConsumerWidget {
             const Header(),
             Row(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("\nBem vindo,",
-                      style: ref
-                          .read(baseTextStyleProvider)
-                          .copyWith(fontSize: 28, fontWeight: FontWeight.w500)),
-                ),
+                Text("Bem Vindo,",
+                    style: ref
+                        .read(baseTextStyleProvider)
+                        .copyWith(fontSize: 32, fontWeight: FontWeight.w500)),
               ],
             ),
             Row(
               children: [
                 Text(
-                  "[Nome_do_usuário]",
+                  "${nome.first} ${nome.last}",
                   style: ref.read(baseTextStyleProvider).copyWith(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -109,61 +103,60 @@ class _ContentSectionState extends ConsumerState<ContentSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Column(
-        children: [
-          Card(
-            color: Theme.of(context).colorScheme.primary,
-            child: ListTile(
-              leading: const Icon(
-                Icons.calendar_today_rounded,
-                size: 50,
-                color: Colors.white,
+        margin: const EdgeInsets.only(top: 20),
+        child: Column(
+          children: [
+            Card(
+              color: Theme.of(context).colorScheme.primary,
+              child: ListTile(
+                leading: const Icon(
+                  Icons.calendar_today_rounded,
+                  size: 50,
+                  color: Colors.white,
+                ),
+                title: const Text("Componentes Curriculares"),
+                contentPadding: const EdgeInsets.all(20.0),
+                titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
+                subtitle: const Text(
+                  "Visualize os componentes curriculares inscritos",
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                onTap: () {
+                  // TODO
+                  // Chamar componente grade
+                },
               ),
-              title: const Text("Componentes Curriculares"),
-              contentPadding: const EdgeInsets.all(20.0),
-              titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white),
-              subtitle: const Text(
-                "Visualize os componentes curriculares inscritos",
-                style: TextStyle(fontSize: 14, color: Colors.white),
-              ),
-              onTap: () {
-                // TODO
-                // Chamar componente grade
-              },
             ),
-          ),
-          Card(
-            color: Theme.of(context).colorScheme.primary,
-            child: ListTile(
-              leading: const Icon(
-                Icons.archive_outlined,
-                size: 50,
-                color: Colors.white,
+            Card(
+              color: Theme.of(context).colorScheme.primary,
+              child: ListTile(
+                leading: const Icon(
+                  Icons.archive_outlined,
+                  size: 50,
+                  color: Colors.white,
+                ),
+                title: const Text("Solicitações de Ajustes de Matrícula"),
+                contentPadding: const EdgeInsets.all(20.0),
+                titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
+                subtitle: Text(
+                    "Crie e acompanhe suas solicitações de ajuste assíncrono",
+                    style: ref
+                        .read(baseTextStyleProvider)
+                        .copyWith(fontSize: 14, color: Colors.white)),
+                onTap: () {
+                  // TODO
+                  // Chamar componente ajustes
+                },
               ),
-              title: const Text("Solicitações de Ajustes de Matrícula"),
-              contentPadding: const EdgeInsets.all(20.0),
-              titleTextStyle: ref.read(baseTextStyleProvider).copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white),
-              subtitle: Text(
-                  "Crie e acompanhe suas solicitações de ajuste assíncrono",
-                  style: ref
-                      .read(baseTextStyleProvider)
-                      .copyWith(fontSize: 14, color: Colors.white)),
-              onTap: () {
-                // TODO
-                // Chamar componente ajustes
-              },
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }
 
@@ -181,10 +174,10 @@ class _HeaderState extends ConsumerState<Header> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
@@ -196,7 +189,23 @@ class _HeaderState extends ConsumerState<Header> {
               ),
             ),
           ),
-          Image(image: AssetImage('images/logo.png'), height: 40),
+          const Image(image: AssetImage('images/Logo.png'), height: 40),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    textStyle: MaterialStateProperty.all<TextStyle>(ref
+                        .read(baseTextStyleProvider)
+                        .copyWith(fontSize: 14))),
+                child: const Text('Atualizar SIAC'),
+                onPressed: () {
+                  // TODO
+                  // Chamar componente conexão SIAC
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

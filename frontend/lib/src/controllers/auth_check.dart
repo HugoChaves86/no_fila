@@ -32,16 +32,14 @@ class AuthSiacValidation extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final siacState = ref.watch(siacServiceProvider);
-
     return siacState.when(
       data: (siacState) {
         if (siacState.data == null) {
-          print('deu ${siacState.email}: ${siacState.data}');
           return const ConnectSiac();
         }
 
-        if (siacState.email == ref.read(userEmailProvider)) {
-          print('deu ${siacState.email}: ${siacState.data}');
+        if (siacState.email ==
+            ref.read(authServiceProvider.notifier).getEmail()) {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }

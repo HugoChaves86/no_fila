@@ -17,7 +17,7 @@ class SiacNotifier extends AsyncNotifier<SiacState> {
 
   @override
   FutureOr<SiacState> build() {
-    String email = ref.read(userEmailProvider.notifier).state;
+    String email = ref.read(authServiceProvider.notifier).getEmail();
     final data = CachePreferences.getUserCache(email);
     return SiacState(email: email, data: data);
   }
@@ -25,7 +25,7 @@ class SiacNotifier extends AsyncNotifier<SiacState> {
   Future<void> loginSiac(String cpf, String senha) async {
     try {
       final data = await _siacRepository.loginSiac(cpf, senha);
-      String email = ref.read(userEmailProvider.notifier).state;
+      String email = ref.read(authServiceProvider.notifier).getEmail();
       await CachePreferences.setUserCache(email, data);
       _getCache();
     } on Exception catch (err) {
@@ -39,7 +39,7 @@ class SiacNotifier extends AsyncNotifier<SiacState> {
   }
 
   void _getCache() {
-    String email = ref.read(userEmailProvider.notifier).state;
+    String email = ref.read(authServiceProvider.notifier).getEmail();
     final data = CachePreferences.getUserCache(email);
     state = AsyncValue.data(SiacState(data: data, email: email));
   }

@@ -23,11 +23,11 @@ class UsuarioSiac {
       semestre: json['current_semester'],
       materias: json['subjects']
           .map<MateriaSiac>((materia) => MateriaSiac(
-                codMateria: materia['subject_code'],
-                nomeMateria: materia['subject'],
+                codMateria: materia['code'],
+                nomeMateria: materia['name'],
                 cargaHoraria: materia['workload'],
-                codTurma: materia['class_code'],
-                turma: materia['class_number'],
+                codTurma: materia['group']['code'],
+                turma: materia['group']['number'],
                 aulas: materia['lessons']
                     .map<SiacAula>((aula) => SiacAula(
                           diaDaSemana: aula['day_of_week'],

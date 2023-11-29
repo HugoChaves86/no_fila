@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/src/common/exceptions.dart';
-import 'package:no_fila/src/common/providers.dart';
 
 class AuthState {
   final User? user;
@@ -25,7 +24,6 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   void _getUser() {
     User? user = _auth.currentUser;
     state = AsyncValue.data(AuthState(user: user, isloading: false));
-    ref.read(userEmailProvider.notifier).state = user?.email ?? '';
   }
 
   Future<void> registrar(String email, String senha) async {
@@ -74,5 +72,9 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
             (err) => throw AuthException('E-mail inválido. Tente novamente.'));
 
     return status;
+  }
+
+  String getEmail() {
+    return _auth.currentUser!.email!;
   }
 }

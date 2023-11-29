@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class SiacRepository {
   final Dio dio = Dio();
@@ -20,7 +21,7 @@ class SiacRepository {
     );
 
     if (response.statusCode == 200) {
-      return response.data.toString();
+      return jsonEncode(response.data);
     } else {
       throw Exception(response.data['detail'] ?? 'Erro desconhecido');
     }

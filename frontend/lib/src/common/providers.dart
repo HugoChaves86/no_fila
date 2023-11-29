@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:no_fila/src/app/siac_service.dart';
 import 'package:no_fila/src/app/auth_service.dart';
+import 'package:no_fila/src/app/userdata_service.dart';
 
 // Define os global providers do app
 
@@ -17,8 +18,10 @@ final authServiceProvider = AsyncNotifierProvider<AuthNotifier, AuthState>(
   () => AuthNotifier(),
 );
 
-final userEmailProvider = StateProvider<String>((ref) => '');
-
 final siacServiceProvider = AsyncNotifierProvider<SiacNotifier, SiacState>(
   () => SiacNotifier(),
+);
+
+final userDataProvider = NotifierProvider<UserDataNotifier, UserData>(
+  () => UserDataNotifier(),
 );
