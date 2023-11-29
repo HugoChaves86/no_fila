@@ -1,7 +1,5 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
-import 'package:no_fila/providers.dart';
+import 'package:no_fila/src/common/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MeuPerfil extends ConsumerStatefulWidget {

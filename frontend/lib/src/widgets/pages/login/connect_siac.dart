@@ -1,35 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:no_fila/providers.dart';
+import 'package:no_fila/src/common/providers.dart';
+import 'package:no_fila/src/widgets/pages/login/login_siac_page.dart';
 
 class ConnectSiac extends ConsumerWidget {
   const ConnectSiac({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: const HomeBar(),
-      bottomNavigationBar: Container(
-        height: 50,
-        color: Colors.indigo,
-        child: const Align(
-          alignment: Alignment.bottomCenter,
-          child: ContentBar(),
-        ),
-      ),
+    return const Scaffold(
+      body: HomeBar(),
     );
-  }
-}
-
-//Notificador do status de conexão com o SIAC
-//Obs.: está em boolean porque estou apenas usando isso
-//para seguir para a HomePage. Necessário mudar a lógica
-//quando tivermos acesso ao token
-class ConnectSiacNotifier extends StateNotifier<bool> {
-  ConnectSiacNotifier() : super(false);
-
-  void setConnected(bool value) {
-    state = value;
   }
 }
 
@@ -64,9 +45,9 @@ class HomeBar extends ConsumerWidget {
             Row(
               children: [
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.center,
                   child: Text(
-                      "\n\nBem vindo ao !FILA.\n\nConecte-se ao SIAC para continuar:",
+                      "\n\nBem vindo ao !FILA.\nConecte-se ao SIAC para continuar:",
                       style: ref
                           .read(baseTextStyleProvider)
                           .copyWith(fontSize: 28, fontWeight: FontWeight.w500)),
@@ -82,13 +63,12 @@ class HomeBar extends ConsumerWidget {
                           .read(baseTextStyleProvider)
                           .copyWith(fontSize: 14))),
                   child: const Text('Conecte-se com o SIAC'),
-                  onPressed: () async {
-                    ref.read(connectSiacProvider.notifier).setConnected(true);
-                    //O connectSiacProvider precisa pegar o token gerado
-                    //e modificar o AuthSiacCheck para seguir para HomePage.
-
-                    //TODO
-                    // Chamar componente conexão SIAC
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginSiacPage(),
+                      ),
+                    );
                   },
                 ),
               ),
