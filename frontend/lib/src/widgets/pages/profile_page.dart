@@ -32,8 +32,10 @@ class _MeuPerfilState extends ConsumerState<MeuPerfil> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: OutlinedButton(
-                onPressed: () async =>
-                    await ref.read(authServiceProvider.notifier).logout(),
+                onPressed: () async {
+                  await ref.read(authServiceProvider.notifier).logout();
+                  ref.read(selectedIndexProvider.notifier).state = 0;
+                },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                 ),

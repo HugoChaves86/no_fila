@@ -28,8 +28,8 @@ class SiacNotifier extends AsyncNotifier<SiacState> {
       String email = ref.read(authServiceProvider.notifier).getEmail();
       await CachePreferences.setUserCache(email, data);
       _getCache();
-    } on Exception catch (err) {
-      throw AuthException(err.toString());
+    } on AuthException catch (err) {
+      throw AuthException(err.message);
     }
   }
 

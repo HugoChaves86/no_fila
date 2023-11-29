@@ -4,7 +4,8 @@ import 'package:no_fila/src/common/exceptions.dart';
 import 'package:no_fila/src/common/providers.dart';
 
 class LoginSiacPage extends ConsumerStatefulWidget {
-  const LoginSiacPage({super.key});
+  const LoginSiacPage({super.key, this.isLogin = true});
+  final bool isLogin;
 
   @override
   ConsumerState<LoginSiacPage> createState() => _LoginSiacPageState();
@@ -14,11 +15,33 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
   final formKey = GlobalKey<FormState>();
   final cpf = TextEditingController();
   final senha = TextEditingController();
+  late bool isLogin;
+  late String titulo;
+  late String actionButton;
+
+  @override
+  void initState() {
+    super.initState();
+    setFormAction(widget.isLogin);
+  }
+
+  setFormAction(bool acao) {
+    setState(() {
+      isLogin = acao;
+      if (isLogin) {
+        titulo = 'Conectar ao SIAC';
+        actionButton = 'Importar dados';
+      } else {
+        titulo = 'Atualizar dados do SIAC';
+        actionButton = 'Atualizar dados';
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text(titulo)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -27,15 +50,21 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Text("Login SIAC",
-                      style: ref
-                          .read(baseTextStyleProvider)
-                          .copyWith(fontSize: 28, fontWeight: FontWeight.w500)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      '/images/logo.png',
+                      height: 75,
+                    ),
+                    const Icon(Icons.sync_alt_outlined, size: 65),
+                    Text("SIAC",
+                        style: ref.read(baseTextStyleProvider).copyWith(
+                            fontSize: 52, fontWeight: FontWeight.w500)),
+                  ],
                 ),
                 Container(
-                  height: 300,
+                  height: 220,
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,8 +73,8 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
                       TextFormField(
                         controller: cpf,
                         decoration: const InputDecoration(
-                          labelText: 'Digite seu cpf',
-                          icon: Icon(Icons.start),
+                          labelText: 'Digite seu CPF',
+                          icon: Icon(Icons.perm_identity),
                           iconColor: Colors.indigo,
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -81,26 +110,13 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
                             _login(cpf.text, senha.text);
                           }
                         },
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.login),
+                            const Icon(Icons.cloud_sync),
                             Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('Entrar'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.refresh),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('Atualizar'),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(actionButton),
                             ),
                           ],
                         ),
@@ -111,14 +127,6 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
               ],
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: 50,
-        color: Colors.indigo,
-        child: const Align(
-          alignment: Alignment.bottomCenter,
-          child: ContentBar(),
         ),
       ),
     );
@@ -135,19 +143,5 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
         ),
       );
     }
-  }
-}
-
-class ContentBar extends StatelessWidget {
-  const ContentBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Login SIAC',
-        style: TextStyle(fontSize: 25, color: Colors.white),
-      ),
-    );
   }
 }

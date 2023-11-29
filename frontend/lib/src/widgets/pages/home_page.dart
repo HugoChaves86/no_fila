@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/src/common/providers.dart';
 import 'package:no_fila/src/common/utils.dart';
+import 'package:no_fila/src/widgets/pages/login/login_siac_page.dart';
 import 'ajustes_page.dart';
 import 'grade_page.dart';
 import 'profile_page.dart';
@@ -17,6 +18,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final selectedIndex = ref.watch(selectedIndexProvider);
+
     return Scaffold(
       body: IndexedStack(index: selectedIndex, children: const <Widget>[
         HomeBar(),
@@ -25,10 +28,10 @@ class _HomePageState extends ConsumerState<HomePage> {
         MeuPerfil(),
       ]),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: selectedIndex,
-        onDestinationSelected: (index) => setState(
-          () => selectedIndex = index,
-        ),
+        selectedIndex: ref.read(selectedIndexProvider.notifier).state,
+        onDestinationSelected: (index) {
+          ref.read(selectedIndexProvider.notifier).state = index;
+        },
         destinations: const <Widget>[
           NavigationDestination(icon: Icon(Icons.home_max), label: 'Início'),
           NavigationDestination(
@@ -125,7 +128,7 @@ class _ContentSectionState extends ConsumerState<ContentSection> {
                   style: TextStyle(fontSize: 14, color: Colors.white),
                 ),
                 onTap: () {
-                  // TODO
+                  ref.read(selectedIndexProvider.notifier).state = 1;
                   // Chamar componente grade
                 },
               ),
@@ -150,8 +153,7 @@ class _ContentSectionState extends ConsumerState<ContentSection> {
                         .read(baseTextStyleProvider)
                         .copyWith(fontSize: 14, color: Colors.white)),
                 onTap: () {
-                  // TODO
-                  // Chamar componente ajustes
+                  ref.read(selectedIndexProvider.notifier).state = 2;
                 },
               ),
             ),
@@ -200,8 +202,13 @@ class _HeaderState extends ConsumerState<Header> {
                         .copyWith(fontSize: 14))),
                 child: const Text('Atualizar SIAC'),
                 onPressed: () {
-                  // TODO
-                  // Chamar componente conexão SIAC
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginSiacPage(
+                        isLogin: false,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),

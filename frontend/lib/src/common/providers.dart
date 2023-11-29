@@ -25,3 +25,5 @@ final siacServiceProvider = AsyncNotifierProvider<SiacNotifier, SiacState>(
 final userDataProvider = NotifierProvider<UserDataNotifier, UserData>(
   () => UserDataNotifier(),
 );
+
+final selectedIndexProvider = StateProvider<int>((ref) => 0);

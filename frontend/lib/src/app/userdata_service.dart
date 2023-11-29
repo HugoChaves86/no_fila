@@ -33,10 +33,12 @@ class UserDataNotifier extends Notifier<UserData> {
     final email = ref.read(authServiceProvider.notifier).getEmail();
     try {
       final data = CachePreferences.getUserCache(email);
-      final json = jsonDecode(data ?? "{}");
-      state = UserData(
-        usuarioSiac: UsuarioSiac.fromJson(json),
-      );
+      if (data != null) {
+        final json = jsonDecode(data);
+        state = UserData(
+          usuarioSiac: UsuarioSiac.fromJson(json),
+        );
+      }
     } on AuthException catch (err) {
       throw AuthException(err.toString());
     }
