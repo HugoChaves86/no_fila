@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
+import 'package:no_fila/src/common/exceptions.dart';
 
 class SiacRepository {
   final Dio dio = Dio();
@@ -10,20 +11,23 @@ class SiacRepository {
     final headers = {
       'Content-Type': 'application/json',
     };
+    try {
+      final response = await dio.post(
+        _baseUrl + _path,
+        options: Options(headers: headers),
+        data: {
+          'cpf': cpf,
+          'senha': senha,
+        },
+      );
 
-    final response = await dio.post(
-      _baseUrl + _path,
-      options: Options(headers: headers),
-      data: {
-        'cpf': cpf,
-        'senha': senha,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return jsonEncode(response.data);
-    } else {
-      throw Exception(response.data['detail'] ?? 'Erro desconhecido');
+      if (response.statusCode == 200) {
+        return jsonEncode(response.data);
+      } else {
+        throw AuthException(response.data['detail'] ?? 'Erro desconhecido');
+      }
+    } on Exception {
+      throw AuthException("Erro ao tentar conectar ao SIAC.");
     }
   }
 }
