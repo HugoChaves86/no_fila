@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:no_fila/widgets/auth_check.dart';
+import 'package:no_fila/src/controllers/auth_check.dart';
 
 class NoFila extends ConsumerWidget {
   const NoFila({super.key});

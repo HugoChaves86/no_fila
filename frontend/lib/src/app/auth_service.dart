@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-class AuthException implements Exception {
-  String message;
-  AuthException(this.message);
-}
+import 'package:no_fila/src/common/exceptions.dart';
 
 class AuthState {
   final User? user;
@@ -63,6 +59,10 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
     _getUser();
   }
 
+  Future<bool> isLoggedOnSiac() async {
+    return true;
+  }
+
   Future<String> resetPassword(String email) async {
     late String status;
     await _auth
@@ -72,5 +72,9 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
             (err) => throw AuthException('E-mail inválido. Tente novamente.'));
 
     return status;
+  }
+
+  String getEmail() {
+    return _auth.currentUser!.email!;
   }
 }

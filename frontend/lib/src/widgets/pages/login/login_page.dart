@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:no_fila/services/auth_service.dart';
+import 'package:no_fila/src/common/exceptions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:no_fila/providers.dart';
+import 'package:no_fila/src/common/providers.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

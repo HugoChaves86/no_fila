@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:no_fila/providers.dart';
+import 'package:no_fila/src/common/providers.dart';
+import 'package:no_fila/src/common/utils.dart';
 import 'ajustes_page.dart';
 import 'grade_page.dart';
 import 'profile_page.dart';
@@ -50,6 +51,8 @@ class HomeBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.read(userDataProvider).usuarioSiac;
+    List<String> nome = nomeDeUsuario(fullName: userData?.nome);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Center(
@@ -67,7 +70,7 @@ class HomeBar extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  "[Nome_do_usuário]",
+                  "${nome.first} ${nome.last}",
                   style: ref.read(baseTextStyleProvider).copyWith(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -195,7 +198,7 @@ class _HeaderState extends ConsumerState<Header> {
                     textStyle: MaterialStateProperty.all<TextStyle>(ref
                         .read(baseTextStyleProvider)
                         .copyWith(fontSize: 14))),
-                child: const Text('Conectar SIAC'),
+                child: const Text('Atualizar SIAC'),
                 onPressed: () {
                   // TODO
                   // Chamar componente conexão SIAC
