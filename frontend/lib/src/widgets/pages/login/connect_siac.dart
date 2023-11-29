@@ -1,39 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:no_fila/src/common/providers.dart';
+import 'package:no_fila/src/widgets/pages/login/login_siac_page.dart';
 
 class ConnectSiac extends ConsumerWidget {
   const ConnectSiac({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: const HomeBar(),
-      bottomNavigationBar: Container(
-        height: 50,
-        color: Colors.indigo,
-        child: const Align(
-          alignment: Alignment.bottomCenter,
-          child: ContentBar(),
-        ),
-      ),
+    return const Scaffold(
+      body: HomeBar(),
     );
-  }
-}
-
-class ConnectSiacNotifier extends StateNotifier<bool> {
-  ConnectSiacNotifier() : super(false);
-
-  void clicou(bool value) {
-    state = value;
-  }
-}
-
-class ConnectionValidationNotifier extends StateNotifier<bool> {
-  ConnectionValidationNotifier() : super(false);
-
-  void validation(bool value) {
-    state = value;
   }
 }
 
@@ -86,8 +63,12 @@ class HomeBar extends ConsumerWidget {
                           .read(baseTextStyleProvider)
                           .copyWith(fontSize: 14))),
                   child: const Text('Conecte-se com o SIAC'),
-                  onPressed: () async {
-                    ref.read(connectSiacProvider.notifier).clicou(true);
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginSiacPage(),
+                      ),
+                    );
                   },
                 ),
               ),

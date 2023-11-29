@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../common/providers.dart';
+import 'package:no_fila/src/common/exceptions.dart';
+import 'package:no_fila/src/common/providers.dart';
 
 class LoginSiacPage extends ConsumerStatefulWidget {
   const LoginSiacPage({super.key});
@@ -19,6 +18,7 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -78,7 +78,7 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
                       ElevatedButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            _login(context, cpf.text, senha.text);
+                            _login(cpf.text, senha.text);
                           }
                         },
                         child: const Row(
@@ -93,10 +93,7 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          //TODO
-                          //inserir a lógica de atualização
-                        },
+                        onPressed: () {},
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -127,34 +124,16 @@ class _LoginSiacPageState extends ConsumerState<LoginSiacPage> {
     );
   }
 
-  _login(BuildContext context, String cpf, String senha) async {
-    final dio = Dio();
-
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-
+  _login(String cpf, String senha) async {
+    final scaffoldContext = ScaffoldMessenger.of(context);
     try {
-      final response = await dio.post(
-        'http://localhost:8000/siac_proof_of_registration',
-        options: Options(headers: headers),
-        data: {
-          'cpf': cpf,
-          'senha': senha,
-        },
+      await ref.read(siacServiceProvider.notifier).loginSiac(cpf, senha);
+    } on AuthException catch (e) {
+      scaffoldContext.showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+        ),
       );
-
-      // print(response);
-      if (response.statusCode == 200) {
-        //print('Status da conexão: Funcionou!.');
-        ref.read(connectionValidation.notifier).validation(true);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      //print(error);
-      return false;
     }
   }
 }
